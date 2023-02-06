@@ -1,8 +1,20 @@
 import { useState } from "react";
 import axios from "axios";
 
+const initialState = [
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0],
+];
+
 function App() {
-  const [puzzle, setPuzzle] = useState([]);
+  const [puzzle, setPuzzle] = useState(initialState);
   const [solution, setSolution] = useState([]);
 
   const handleFetchPuzzle = () => {
@@ -27,7 +39,11 @@ function App() {
       });
   };
 
-  const handleCol = () => {};
+  const handleCol = (rowIdx, colIdx, value) => {
+    const newGrid = [...puzzle];
+    newGrid[rowIdx][colIdx] = value;
+    setPuzzle(newGrid);
+  };
 
   return (
     <div className="app">
@@ -41,7 +57,11 @@ function App() {
           <div key={rowIdx} className="row">
             {row.map((col, colIdx) => (
               <div key={colIdx} className="col">
-                <input type="text" value={col} onChange={handleCol} />
+                <input
+                  type="text"
+                  value={col}
+                  onChange={(e) => handleCol(rowIdx, colIdx, e.target.value)}
+                />
               </div>
             ))}
           </div>
