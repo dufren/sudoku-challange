@@ -13,6 +13,13 @@ code {
 }
 
 .grid {
+  padding-left: 50px;
+  display: grid;
+  grid-template-columns: repeat(9, 50px);
+}
+
+.grid-solution {
+  padding-left: 50px;
   display: grid;
   grid-template-columns: repeat(9, 50px);
 }
@@ -29,4 +36,12 @@ code {
 
 .row input:focus {
   outline: none;
+}
+
+.main {
+  display: flex;
+}
+
+h1 {
+  padding-left: 50px;
 }
