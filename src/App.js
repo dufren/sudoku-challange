@@ -16,7 +16,7 @@ const initialState = [
 function App() {
   const [puzzle, setPuzzle] = useState(initialState);
   const [solution, setSolution] = useState([]);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   const handleFetchPuzzle = () => {
     axios.get("https://sudoku-api.vercel.app/api/dosuku").then((res) => {
@@ -24,6 +24,7 @@ function App() {
       setPuzzle(data.newboard.grids[0].value);
       setSolution(data.newboard.grids[0].solution);
     });
+    handleSolution();
   };
 
   const handleSolution = () => {
@@ -40,7 +41,10 @@ function App() {
     <div className="app">
       <div className="buttons">
         <button onClick={handleFetchPuzzle}>new table</button>
-        <button onClick={handleSolution}>solve</button>
+        <button disabled={!solution.length} onClick={handleSolution}>
+          solve
+        </button>
+        <p>first get ur table then u can access to solution</p>
       </div>
       <div className="main">
         <div>
@@ -60,7 +64,6 @@ function App() {
 
         <div>
           <h1>solution</h1>
-          {!visible && <h1>press solve to solution</h1>}
           {visible && (
             <div className="grid-solution">
               {solution?.map((row, rowIdx) => (
