@@ -27,6 +27,7 @@ function App() {
 
       if (solutionForCompare === puzzleForCompare) {
         setIsCompleted(true);
+        setVisible(true);
       }
     }
   };
@@ -66,7 +67,7 @@ function App() {
           className="p-5 rounded border border-black mr-5 text-lg"
           onClick={handleFetchPuzzle}
         >
-          new table
+          new sudoku
         </button>
         <button
           className="p-5 rounded border border-black text-lg"
@@ -75,7 +76,8 @@ function App() {
           solve
         </button>
         <p className="text-2xl p-5">
-          get your table by clicking new table, then u can access to solution
+          get your sudoku table by clicking new sudoku, then u can access to
+          solution
         </p>
       </div>
 
@@ -97,9 +99,9 @@ function App() {
         </div>
       </div>
       {isCompleted && (
-        <div className="p-10 text-4xl text-center">
-          <p>Well done, you have completed the table with success.</p>
-          <p>You can start again with getting a new table</p>
+        <div className="p-10 mt-20 text-4xl text-center">
+          <p>Well done, you have completed the sudoku.</p>
+          <p>you can start again by pressing the new sudoku</p>
         </div>
       )}
     </div>
