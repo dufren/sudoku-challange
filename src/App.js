@@ -44,24 +44,26 @@ function App() {
 
   const handleMap = (data) => {
     return data?.map((row, rowIdx) => (
-      <div key={rowIdx}>
-        {row.map((col, colIdx) => (
-          <div className="" key={colIdx}>
-            <input
-              className="w-10 border border-black outline-none text-center"
-              type="number"
-              value={col}
-              onChange={(e) => handleCol(rowIdx, colIdx, e.target.value)}
-            />
-          </div>
-        ))}
+      <div className="p-1 shadow-2xl border text-center" key={rowIdx}>
+        {row.map((col, colIdx) => {
+          return (
+            <div className="p-1" key={colIdx}>
+              <input
+                className="w-10 outline-none text-center"
+                type="number"
+                value={col}
+                onChange={(e) => handleCol(rowIdx, colIdx, e.target.value)}
+              />
+            </div>
+          );
+        })}
       </div>
     ));
   };
 
   return (
     <div>
-      <div className="text-center">
+      <div className="text-center p-10">
         {isCompleted && <Confetti className="w-full" />}
         <button
           className="p-5 rounded border border-black mr-5 text-lg"
@@ -81,20 +83,16 @@ function App() {
         </p>
       </div>
 
-      <div className="flex justify-center">
-        <div className="">
-          <h1 className="text-center p-3 text-2xl">sudoku</h1>
-          <div className="grid grid-cols-9 w-3/4 mx-auto">
-            {handleMap(puzzle)}
-          </div>
+      <div className="md:grid lg:grid-cols-2 place-items-center">
+        <div className="lg:w-3/4">
+          <h1 className="text-center text-2xl">sudoku</h1>
+          <div className="grid grid-cols-9">{handleMap(puzzle)}</div>
         </div>
 
-        <div>
-          <h1 className="text-center p-3 text-2xl">solution</h1>
+        <div className="lg:w-3/4">
+          <h1 className="text-center text-2xl">solution</h1>
           {visible && (
-            <div className="grid grid-cols-9 w-3/4 mx-auto">
-              {handleMap(solution)}
-            </div>
+            <div className="grid grid-cols-9">{handleMap(solution)}</div>
           )}
         </div>
       </div>
