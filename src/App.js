@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Confetti from "react-confetti";
 
@@ -7,6 +7,13 @@ function App() {
   const [solution, setSolution] = useState([]);
   const [visible, setVisible] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
+
+  useEffect(() => {
+    if (solution.toString() === puzzle.toString() && puzzle.length > 0) {
+      setIsCompleted(true);
+      setVisible(true);
+    }
+  }, [puzzle, solution]);
 
   const handleFetchPuzzle = () => {
     axios.get("https://sudoku-api.vercel.app/api/dosuku").then((res) => {
@@ -19,17 +26,7 @@ function App() {
   };
 
   const handleSolution = () => {
-    if (puzzle.length > 0) {
-      setVisible((prev) => !prev);
-
-      let solutionForCompare = solution.toString();
-      let puzzleForCompare = puzzle.toString();
-
-      if (solutionForCompare === puzzleForCompare) {
-        setIsCompleted(true);
-        setVisible(true);
-      }
-    }
+    setVisible((prev) => !prev);
   };
 
   const handleCol = (rowIdx, colIdx, value) => {
