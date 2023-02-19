@@ -1,48 +1,54 @@
 import { useState } from "react";
 import axios from "axios";
-
-const initialState = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-];
+import Confetti from "react-confetti";
 
 function App() {
-  const [puzzle, setPuzzle] = useState(initialState);
+  const [puzzle, setPuzzle] = useState([]);
   const [solution, setSolution] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   const handleFetchPuzzle = () => {
     axios.get("https://sudoku-api.vercel.app/api/dosuku").then((res) => {
       const data = res.data;
       setPuzzle(data.newboard.grids[0].value);
       setSolution(data.newboard.grids[0].solution);
+      setVisible(false);
+      setIsCompleted(false);
     });
   };
 
   const handleSolution = () => {
-    setVisible(!visible);
+    if (puzzle.length > 0) {
+      setVisible((prev) => !prev);
+
+      let solutionForCompare = solution.toString();
+      let puzzleForCompare = puzzle.toString();
+
+      if (solutionForCompare === puzzleForCompare) {
+        setIsCompleted(true);
+      }
+    }
   };
 
   const handleCol = (rowIdx, colIdx, value) => {
-    const newGrid = [...puzzle];
-    newGrid[rowIdx][colIdx] = value;
-    setPuzzle(newGrid);
+    value = parseInt(value);
+
+    if (value >= 0 && value <= 9) {
+      const newGrid = [...puzzle];
+      newGrid[rowIdx][colIdx] = value;
+      setPuzzle(newGrid);
+    }
   };
 
   const handleMap = (data) => {
     return data?.map((row, rowIdx) => (
-      <div key={rowIdx} className="row">
+      <div key={rowIdx}>
         {row.map((col, colIdx) => (
-          <div key={colIdx} className="col">
+          <div className="" key={colIdx}>
             <input
-              type="text"
+              className="w-10 border border-black outline-none text-center"
+              type="number"
               value={col}
               onChange={(e) => handleCol(rowIdx, colIdx, e.target.value)}
             />
@@ -53,25 +59,49 @@ function App() {
   };
 
   return (
-    <div className="app">
-      <div className="buttons">
-        <button onClick={handleFetchPuzzle}>new table</button>
-        <button onClick={handleSolution}>solve</button>
-        <p>first get ur table then u can access to solution</p>
+    <div>
+      <div className="text-center">
+        {isCompleted && <Confetti className="w-full" />}
+        <button
+          className="p-5 rounded border border-black mr-5 text-lg"
+          onClick={handleFetchPuzzle}
+        >
+          new table
+        </button>
+        <button
+          className="p-5 rounded border border-black text-lg"
+          onClick={handleSolution}
+        >
+          solve
+        </button>
+        <p className="text-2xl p-5">
+          get your table by clicking new table, then u can access to solution
+        </p>
       </div>
-      <div className="main">
-        <div>
-          <h1>sudoku</h1>
-          <div className="grid">{handleMap(puzzle)}</div>
+
+      <div className="flex justify-center">
+        <div className="">
+          <h1 className="text-center p-3 text-2xl">sudoku</h1>
+          <div className="grid grid-cols-9 w-3/4 mx-auto">
+            {handleMap(puzzle)}
+          </div>
         </div>
 
         <div>
-          <h1>solution</h1>
+          <h1 className="text-center p-3 text-2xl">solution</h1>
           {visible && (
-            <div className="grid-solution">{handleMap(solution)}</div>
+            <div className="grid grid-cols-9 w-3/4 mx-auto">
+              {handleMap(solution)}
+            </div>
           )}
         </div>
       </div>
+      {isCompleted && (
+        <div className="p-10 text-4xl text-center">
+          <p>Well done, you have completed the table with success.</p>
+          <p>You can start again with getting a new table</p>
+        </div>
+      )}
     </div>
   );
 }
